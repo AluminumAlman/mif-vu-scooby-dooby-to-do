@@ -1,5 +1,5 @@
 # Sukurta komandos: Scooby Dooby to Do
-HTML svetainė, sukurta Vilniaus Universiteto procedūrinio programavimo kurso projekto tikslais.
+HTML svetainė, sukurta Vilniaus Universiteto procedūrinio programavimo dalyko projekto tikslais.
 
 ## Komandos nariai:
 - Artiom Hovhannisyan (HTML, CSS, grafikos);
