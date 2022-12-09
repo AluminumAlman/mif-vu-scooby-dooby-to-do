@@ -114,7 +114,7 @@ img{
 .side{
     display: inline-block;
     font-size: 25px;
-    width: 55%;
+    width: 50%;
     margin: 0 0 0 2%;
     vertical-align: top;
     height: 100%;/*changed*/
@@ -123,7 +123,7 @@ img{
 
 .closest{
     border-radius: 10px;
-    margin: 10px 0;
+    margin: 10px 10px;
     padding: 15px;
     background-color: #8DB9A1;
     box-shadow: 0 3px 3px #8DB9A1;
@@ -131,6 +131,7 @@ img{
 
 .details{
     border-radius: 10px;
+    margin: 0 10px;
     padding: 15px;
     background-color: #8DB9A1;
     word-wrap: break-word;
@@ -140,8 +141,43 @@ img{
     box-shadow: 0 3px 3px #8DB9A1;
 }
 
+.counterBar{
+    display: inline-block;
+    font-size: 25px;
+    width: 15%;
+    margin: 0 0 0 2%;
+    padding: 10px;
+    vertical-align: top;
+    height: 90%;
+    
+}
+
+.counter{
+    height: 40%;
+    margin: 0 10% 10% 10%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #558B6E;
+    border-radius: 10px;
+    box-shadow: 0 3px 3px #8DB9A1;
+    color: white;
+
+}
+
+.completed{
+    font-size: 25px;
+    margin: 10px;
+    
+}
 
 
+.completed_n{
+    font-size: 75px;
+    margin: 10 px;
+    
+}
 .footer {
     width: auto;
     height: 50px;
