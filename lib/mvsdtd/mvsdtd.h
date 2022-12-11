@@ -19,6 +19,14 @@ size_t alignNumberToMemory(size_t number);
 /*
  * @author Almantas Mecele (AluminumAlman)
  * @since 0.1
+ * Gets the file's size
+ * @param  file - pointer to a FILE struct
+ * @return filesize in bytes
+ */
+size_t getFileSize(FILE *file)
+/*
+ * @author Almantas Mecele (AluminumAlman)
+ * @since 0.1
  * Creates a new string which is filled by a file's contents.
  * @param  fileName - file name as string
  * @return file bytes as string
