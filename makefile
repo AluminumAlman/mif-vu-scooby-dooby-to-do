@@ -11,7 +11,7 @@ OBJECTS := $(patsubst %.c,$(BUILD_DIR)/%.o,$(SOURCES))
 LIBRARIES := $(shell find $(LIBRARY_DIR) -name '*.a')
 
 INCLUDE_LIB_DIRS := $(addprefix -L,$(dir $(LIBRARIES)))
-INCLUDE_LIBS := $(addprefix -l,$(patsubst ./lib/lib%/,%,$(dir $(LIBRARIES))))
+INCLUDE_LIBS := $(addprefix -l,$(patsubst ./lib/%/,%,$(dir $(LIBRARIES))))
 INCLUDE_DIRS := $(addprefix -I,$(SOURCE_DIR)) $(addprefix -I,$(dir $(LIBRARIES)))
 
 CC := gcc

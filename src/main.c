@@ -1,8 +1,7 @@
 #include <stdio.h>
-#include "libmvsdtd.h"
+#include "mvsdtd.h"
 
 int main()
 {
-	printf("%s", helloworld());
 	return(0);
 }
