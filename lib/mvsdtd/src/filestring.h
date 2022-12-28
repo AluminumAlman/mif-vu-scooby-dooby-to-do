@@ -7,7 +7,7 @@
  * @param  file - pointer to a FILE struct
  * @return filesize in bytes
  */
-size_t getFileSize(FILE *file)
+size_t getFileSize(FILE *file);
 
 /*
  * @author Almantas Mecele (AluminumAlman)
