@@ -6,12 +6,12 @@
 typedef struct {
         char *name;
         char *description;
-        uint16_t time;
+        unsigned short int time;
         unsigned char state;
 } Task;
 
-Task *convertStringToTask(char *inputString);
+extern Task *convertStringToTask(char *inputString);
 
-char *convertTaskToString(Task *inputTask);
+extern char *convertTaskToString(Task *inputTask);
 
 #endif

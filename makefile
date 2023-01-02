@@ -5,6 +5,7 @@ TARGET_EXEC := exec.elf
 BUILD_DIR := ./build
 SOURCE_DIR := ./src
 LIBRARY_DIR := ./lib
+TEST_DIR := ./test
 
 SOURCES := $(shell find $(SOURCE_DIR) -name '*.c')
 OBJECTS := $(patsubst %.c,$(BUILD_DIR)/%.o,$(SOURCES))
@@ -33,3 +34,8 @@ fullclean:
 .PHONY: clean
 clean:
 	rm $(BUILD_DIR) -rf
+
+.PHONY: test
+test: $(TEST_DIR)/*
+	$(CC) $(CFLAGS) $(INCLUDE_DIRS) $(INCLUDE_LIB_DIRS) $(INCLUDE_LIBS) $< -o $<.o
+	$<.o
