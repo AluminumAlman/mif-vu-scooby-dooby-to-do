@@ -13,10 +13,11 @@ char TaskMark(char taskName[], Task taskList[], int taskAmount)
                         taskList[i].state = 1;
                         markFlag = 1;
                 }
+                i++;
         }
 
         if(markFlag == 1)
-                return 0;
+                return 1;
         else 
-                return -1;
+                return 0;
 }
