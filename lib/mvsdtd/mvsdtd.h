@@ -1,5 +1,8 @@
  #ifndef LIBMVSDTD_H
  #define LIBMVSDTD_H
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
 /*
  * @author Almantas Mecele
  * @version 0.1

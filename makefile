@@ -37,5 +37,5 @@ clean:
 
 .PHONY: test
 test: $(TEST_DIR)/*
-	$(CC) $(CFLAGS) $(INCLUDE_DIRS) $(INCLUDE_LIB_DIRS) $(INCLUDE_LIBS) $< -o $<.o
-	$<.o
+	$(CC) $(patsubst test%,src%,$<) $< $(CFLAGS) $(INCLUDE_DIRS) $(INCLUDE_LIB_DIRS) $(INCLUDE_LIBS) -o $<.elf
+	$<.elf

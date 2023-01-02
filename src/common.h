@@ -1,8 +1,6 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include <inttypes.h>
-
 typedef struct {
         char *name;
         char *description;
@@ -13,5 +11,7 @@ typedef struct {
 extern Task *convertStringToTask(char *inputString);
 
 extern char *convertTaskToString(Task *inputTask);
+
+extern void destroyTask(Task *inputTask);
 
 #endif

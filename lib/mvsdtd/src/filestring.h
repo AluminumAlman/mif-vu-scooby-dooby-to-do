@@ -50,7 +50,7 @@ char* stringCopyInvertedDirection(char *destinationString, char *const sourceStr
 /*
  * @author Almantas Mecele (AluminumAlman)
  * @since 0.1
- * Expands or shrinks the string containing the supplied string token start to fit the token substitute string, then writes the token substitute string to the start of the string token.
+ * Expands or shrinks the string containing the supplied string token start to fit the token substitute string, then writes the token substitute string to the start of the string token. DOES NOT ACTUALLY RESIZE THE STRING!
  * @param stringTokenStart - where the start of the string's token is
  * @param stringTokenLength - the string token's span
  * @param tokenSubstituteString - with what string to replace the token
