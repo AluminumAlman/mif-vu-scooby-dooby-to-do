@@ -1,4 +1,22 @@
-void TaskMark(char name[])
+#include <string.h>
+#include "taskmark.h"
+#include "common.h"
+
+char TaskMark(char taskName[], Task taskList[], int taskAmount)
 {
-        return;
+        unsigned char markFlag = 0;
+        int i = 0;
+        while(i < taskAmount && markFlag == 0)
+        {
+                if(strcmp(taskList[i].name, taskName) == 0)
+                {
+                        taskList[i].state = 1;
+                        markFlag = 1;
+                }
+        }
+
+        if(markFlag == 1)
+                return 0;
+        else 
+                return -1;
 }
