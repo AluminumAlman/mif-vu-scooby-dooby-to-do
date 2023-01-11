@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
                         TaskAdd(argv[2]);
                         break;
                 case(rem):
-                        TaskRemove(argv[2]);
+                        TaskRemove(argv[2]);    //size turi sumazeti
                         break;
                 case(mark):
                         TaskMark(argv[2]);
