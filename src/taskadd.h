@@ -1,6 +1,7 @@
 #ifndef TASK_ADD_H
 #define TASK_ADD_H
 
-extern void TaskAdd(char name[]);
+extern char TaskAdd(char argumentFile[], Task allTasks[], int newTaskIndex)
+
 
 #endif
