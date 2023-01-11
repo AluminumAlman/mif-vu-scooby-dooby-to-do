@@ -26,6 +26,8 @@ const char USAGE_INFO[] = "Usage: %s [option] [task name]\n"
         FUNC(mark) \
         FUNC(NULL_OPTION)
 
+#define OPTIONS_COUNT 3
+
 enum OPTIONS_ENUM {
         OPTIONS(GENERATE_ENUM)
 };
@@ -34,7 +36,7 @@ const char OPTIONS_STRINGS[][16] = {OPTIONS(GENERATE_STRING)};
 ///
 /// FUNCTION DEFINITIONS
 ///
-static signed char GetOption(char *arg);
+static unsigned char GetOption(char *arg);
 
 ///
 /// MAIN
@@ -69,18 +71,14 @@ int main(int argc, char *argv[])
 ///
 /// FUNCTION IMPLEMENTATIONS
 ///
-static signed char GetOption(char *arg)
+static unsigned char GetOption(char *arg)
 {
-        for(signed char i = 0; i < 127; ++i)
+        for(unsigned char i = 0; i < OPTIONS_COUNT && i < 255; ++i)
         {
-                if(strcmp(arg, "NULL_OPTION"))
-                {
-                        return(-1);
-                }
                 if(strcmp(arg, OPTIONS_STRINGS[i]) == 0)
                 {
                         return(i);
                 }
         }
-        return(-1);
+        return(NULL_OPTION);
 }
