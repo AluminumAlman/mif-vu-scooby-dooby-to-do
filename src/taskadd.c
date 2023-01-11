@@ -7,7 +7,7 @@
 
 char TaskAdd(char argumentFile[], Task allTasks[], int newTaskIndex)
 {
-        char *argument = fopen("argumentFile", "r");
+        FILE *argument = fopen("argumentFile", "r");
         char argumentStr[getFileSize(argument) + 1];
 
         if (argument == NULL)
