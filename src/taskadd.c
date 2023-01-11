@@ -14,7 +14,8 @@ char TaskAdd(char argumentFile[], Task allTasks[], int newTaskIndex)
                 return 0;
         
         int i = 0;
-        while(i < getFileSize(argument))
+        int sizeOfFile = getFileSize(argument);
+        while(i < sizeOfFile)
         {
                 argumentStr[i] = fgetc(argument);
                 i++;
