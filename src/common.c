@@ -4,44 +4,202 @@
 #include "mvsdtd.h"
 #include "common.h"
 
-Task *convertStringToTask(char *inputString)
+Task *convertStringToTask(const char *inputString)
 {
-        // Since strtok messes with the string, create a copy of it
-        char *inputStringCopy = strcpy(malloc(alignNumberToMemory(strlen(inputString) + 1)), inputString);
-        Task *newTask = malloc(alignNumberToMemory(sizeof(Task)));
+        if(inputString == NULL)
+        {
+                return(NULL);
+        }
 
-        // Make sure we're passing off addresses to copies, not the input string itself
-        char *tempString = strtok(inputStringCopy, "#");
-        newTask->name = strcpy(malloc(alignNumberToMemory(strlen(tempString)+1)), tempString);
+        char *inputCopy = strdup(inputString);
+        if(inputCopy == NULL)
+        {
+                return(NULL);
+        }
 
-        tempString = strtok(NULL, "#");
-        newTask->description = strcpy(malloc(alignNumberToMemory(strlen(tempString)+1)), tempString);
+        char *taskName = strtok(inputCopy, "#");
+        char *taskDescription = strtok(NULL, "#");
+        if(taskName == NULL || taskDescription == NULL)
+        {
+                free(inputCopy);
+                return(NULL);
+        }
 
-        sscanf(strtok(NULL, "#"), "%hu", &(newTask->time));
+        unsigned short int taskTime;
+        unsigned char taskState;
+        if(sscanf(taskDescription + strlen(taskDescription) + 1, "%4hu#%1hhu", &taskTime, &taskState) != 2)
+        {
+                free(inputCopy);
+                return(NULL);
+        }
 
-        char *stateBuffer = strtok(NULL, "#");
-        newTask->state = stateBuffer[0] - '0';
-
-        free(inputStringCopy); // Don't forget to free the copy
-
+        Task *newTask = createTask(taskName, taskDescription, taskTime, taskState);
+        free(inputCopy);
         return(newTask);
 }
 
-char *convertTaskToString(Task *inputTask)
+char *convertTaskToString(const Task *inputTask)
 {
-        char *finalString = malloc(alignNumberToMemory(strlen(inputTask->name) +
-                                strlen(inputTask->description) + 9));
+        if(inputTask == NULL)
+        {
+                return(NULL);
+        }
 
-        sprintf(finalString, "%s#%s#%hu#%hhu", inputTask->name, inputTask->description, inputTask->time, inputTask->state);
+        // We'll allocate a character array (string) large enough to fit the name,
+        // description, 3 '#' characters and 5 numeral (0~9) characters,
+        // as well as a null terminator character
+        char *newString = malloc(alignNumberToMemory((strlen(inputTask->name)
+                                        + strlen(inputTask->description) + 9)));
+        if(newString == NULL)
+        {
+                return(NULL);
+        }
 
-        return(finalString);
+        int sprintReturn = sprintf(newString, "%s#%s#%hu#%hhu",
+                        inputTask->name, inputTask->description,
+                        inputTask->timeMins % MINUTES_IN_DAY,
+                        inputTask->state % 2);
+        if(sprintReturn < 0)
+        {
+                free(newString);
+                return(NULL);
+        }
+
+        return(newString);
 }
 
-void destroyTask(Task *inputTask)
+Task *convertStringToTaskArray(const char *inputString, size_t *retArrayCount)
 {
-        free(inputTask->name);
-        free(inputTask->description);
-        free(inputTask);
+        if(inputString == NULL || retArrayCount == NULL)
+        {
+                return(NULL);
+        }
 
+        char *inputCopy = strdup(inputString);
+        if(inputCopy == NULL)
+        {
+                return(NULL);
+        }
+
+        char *splitString = strtok(inputCopy, "\n");
+        if(splitString == NULL)
+        {
+                free(inputCopy);
+                return(NULL);
+        }
+
+        size_t arrayCount = 0;
+        size_t arrayCapacity = 4;
+        const size_t TASK_SIZE = alignNumberToMemory(sizeof(Task));
+
+        Task *newArray = malloc(TASK_SIZE * alignNumberToMemory(arrayCapacity));
+        if(newArray == NULL)
+        {
+                free(inputCopy);
+                return(NULL);
+        }
+
+        Task *newTask = convertStringToTask(splitString);
+        if(newTask != NULL)
+        {
+                memcpy(newArray + arrayCount, newTask, TASK_SIZE);
+                free(newTask);
+                ++arrayCount;
+        }
+
+        while((splitString = strtok(splitString + strlen(splitString) + 1, "\n")) != NULL)
+        {
+                if(arrayCount >= arrayCapacity)
+                {
+                        arrayCapacity = alignNumberToMemory(arrayCapacity + 1);
+                        newArray = realloc(newArray, TASK_SIZE * arrayCapacity);
+                }
+                newTask = convertStringToTask(splitString);
+                if(newTask != NULL)
+                {
+                        memcpy(newArray + arrayCount, newTask, TASK_SIZE);
+                        free(newTask);
+                        ++arrayCount;
+                }
+        }
+        *retArrayCount = arrayCount;
+
+        free(inputCopy);
+        return(newArray);
+}
+
+char *convertTaskArrayToString(const Task inputArray[], const size_t arrayCount)
+{
+        size_t newStringLength = 0;
+        for(size_t i = 0; i < arrayCount; ++i)
+        {
+                newStringLength += strlen(inputArray[i].name);
+                newStringLength += strlen(inputArray[i].description);
+        }
+
+        newStringLength += 9 * arrayCount;      // Each task struct gets written down in format
+                                                // %s#%s#%4hu#%1hhu\n
+
+        char *newString = malloc(alignNumberToMemory(sizeof(char) * newStringLength + 1));
+        if(newString == NULL)
+        {
+                return(NULL);
+        }
+
+        char *stringPosition = newString;
+        for(size_t i = 0; i < arrayCount; ++i)
+        {
+                int sprintResult = sprintf(stringPosition, "%s#%s#%hu#%hhu\n",
+                                inputArray[i].name, inputArray[i].description,
+                                inputArray[i].timeMins, inputArray[i].state);
+                if(sprintResult < 0)
+                {
+                        free(newString);
+                        return(NULL);
+                }
+
+                stringPosition += sprintResult;
+        }
+
+        return(newString);
+}
+
+Task *createTask(char name[], char description[], unsigned int timeMins, unsigned char state)
+{
+        if(name == NULL || description == NULL)
+        {
+                return(NULL);
+        }
+        Task *newTask = malloc(alignNumberToMemory(sizeof(Task)));
+        if(newTask == NULL)
+        {
+                return(NULL);
+        }
+
+        newTask->name = strdup(name);
+        if(newTask->name == NULL)
+        {
+                free(newTask);
+                return(NULL);
+        }
+        newTask->description = strdup(description);
+        if(newTask->description == NULL)
+        {
+                free(newTask->name);
+                free(newTask);
+                return(NULL);
+        }
+        newTask->timeMins = timeMins % MINUTES_IN_DAY;
+        newTask->state = state % 2;
+
+        return(newTask);
+}
+void destroyTask(Task **inputTask)
+{
+        Task *tempTask = *inputTask;
+        free(tempTask->name);
+        free(tempTask->description);
+        free(tempTask);
+        *inputTask = NULL;
         return;
 }
