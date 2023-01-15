@@ -2,8 +2,8 @@
 HTML svetainė, sukurta Vilniaus Universiteto procedūrinio programavimo dalyko projekto tikslais.
 
 ## Komandos nariai:
-- Artiom Hovhannisyan (HTML, CSS, grafikos);
-- Evgenij Shapovalov (HTML, CSS);
+- Artiom Hovhannisyan (HTML, CSS, grafikos, C);
+- Evgenij Shapovalov (HTML, CSS, C);
 - Almantas Mečelė (C, makefile);
 - Denis Olechnovič (HTML);
 
