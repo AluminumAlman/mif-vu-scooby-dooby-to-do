@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "common.h"
 #include "enumstring.h"
 #include "mvsdtd.h"
 #include "taskadd.h"
@@ -10,12 +11,12 @@
 ///
 /// CONSTANTS
 ///
-const char USAGE_INFO[] = "Usage: %s [option] [task name]\n"
+const char USAGE_INFO[] = "Usage: %s [option] [option arguments]\n"
 "\n"
 "Options:\n"
-"    add   Add a task with description within <filename here>\n"
-"    rem   Remove a task from tracking\n"
-"    mark  Mark a task as (un)finished\n"
+"    add [file name]   Add a task with description within the file\n"
+"    rem [task name]   Remove a task of the supplied name from the list\n"
+"    mark [task name]  Toggle a task as either finished or unfinished\n"
 "\n"
 "Every option updates the task list \"TaskList.txt\" and HTML document \"index.html\"\n"
 "Preferrably used in the same directory as the root directory of the project\n";
@@ -49,22 +50,67 @@ int main(int argc, char *argv[])
                 return(EXIT_FAILURE);
         }
 
+        unsigned char gotOption = GetOption(argv[1]);
+        if(gotOption >= OPTIONS_COUNT)
+        {
+                printf(USAGE_INFO, argv[0]);
+                return(EXIT_FAILURE);
+        }
+
+        // Parse the saved tasks into memory as a task struct array
+        char *tasksFileContents = readFileToString("tasks.txt");
+        Task *tasksArray = NULL;
+        size_t tasksArrayCount = 0;
+        if(tasksFileContents != NULL)
+        {
+                tasksArray = convertStringToTaskArray(tasksFileContents, &tasksArrayCount);
+                free(tasksFileContents);
+        }
+
         switch(GetOption(argv[1]))
         {
                 case(add):
-                        TaskAdd(argv[2]);
+                {
+                        if(tasksArrayCount == 0 || alignNumberToMemory(tasksArrayCount) != alignNumberToMemory(tasksArrayCount + 1))
+                                // In case we don't have enough space to add a task to the array,
+                                // reallocate it with increased size
+                        {
+                                tasksArray = realloc(tasksArray,
+                                                alignNumberToMemory(sizeof(Task)) *
+                                                alignNumberToMemory(tasksArrayCount + 1));
+                        }
+                        if(TaskAdd(argv[2], tasksArray, tasksArrayCount))
+                        {
+                                ++tasksArrayCount;
+                        }
                         break;
+                }
                 case(rem):
-                        TaskRemove(argv[2]);    //size turi sumazeti
+                {
+                        if(TaskRemove(tasksArray, tasksArrayCount, argv[2]))
+                        {
+                                --tasksArrayCount;
+                        }
                         break;
+                }
                 case(mark):
-                        TaskMark(argv[2]);
+                {
+                        TaskMark(argv[2], tasksArray, tasksArrayCount);
                         break;
+                }
                 default:
+                {
                         printf(USAGE_INFO, argv[0]);
                         return(EXIT_FAILURE);
+                }
         }
 
+        // Save the modified task struct array to file
+        char *tasksArrayAsString = convertTaskArrayToString(tasksArray, tasksArrayCount);
+        writeStringToFile(tasksArrayAsString, "tasks.txt");
+
+        free(tasksArrayAsString);
+        free(tasksArray);
         return(EXIT_SUCCESS);
 }
 

@@ -4,6 +4,17 @@
 #include "mvsdtd.h"
 #include "common.h"
 
+void *reallocCustom(void *pointer, size_t size)
+{
+        void *temp = malloc(size);
+        if(temp != NULL)
+        {
+                memcpy(temp, pointer, size);
+        }
+        free(pointer);
+        return(temp);
+}
+
 Task *convertStringToTask(const char *inputString)
 {
         if(inputString == NULL)
@@ -89,10 +100,10 @@ Task *convertStringToTaskArray(const char *inputString, size_t *retArrayCount)
         }
 
         size_t arrayCount = 0;
-        size_t arrayCapacity = 4;
+        size_t arrayCapacity = alignNumberToMemory(1);
         const size_t TASK_SIZE = alignNumberToMemory(sizeof(Task));
 
-        Task *newArray = malloc(TASK_SIZE * alignNumberToMemory(arrayCapacity));
+        Task *newArray = malloc(TASK_SIZE * arrayCapacity);
         if(newArray == NULL)
         {
                 free(inputCopy);
@@ -108,6 +119,9 @@ Task *convertStringToTaskArray(const char *inputString, size_t *retArrayCount)
         }
 
         while((splitString = strtok(splitString + strlen(splitString) + 1, "\n")) != NULL)
+                // Why not strtok(NULL, "\n")?
+                // That's because convertStringToTask uses strtok,
+                // which makes strtok forget the address to splitString every time
         {
                 if(arrayCount >= arrayCapacity)
                 {
@@ -160,6 +174,7 @@ char *convertTaskArrayToString(const Task inputArray[], const size_t arrayCount)
 
                 stringPosition += sprintResult;
         }
+        newString[newStringLength] = 0;
 
         return(newString);
 }

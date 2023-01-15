@@ -15,6 +15,16 @@ typedef struct {
 } Task;
 
 /**
+ * reallocCustom
+ * Custom implementation of realloc, because in my experience it sometimes fails to actually allocate memory
+ * AUTOMATICALLY FREES THE SUPPLIED POINTER
+ * @param  pointer - pointer to reallocate
+ * @param  size - size of new memory to allocate
+ * @return address of newly allocated memory or NULL
+ */
+void *reallocCustom(void *pointer, size_t size);
+
+/**
  * convertStringToTask
  * @param  inputString - string to turn into a task struct
  * @return pointer to a new task struct or NULL on failure
