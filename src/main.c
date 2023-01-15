@@ -38,6 +38,7 @@ const char OPTIONS_STRINGS[][16] = {OPTIONS(GENERATE_STRING)};
 /// FUNCTION DEFINITIONS
 ///
 static unsigned char GetOption(char *arg);
+int sortTasksFunc(const void *a, const void *b);
 
 ///
 /// MAIN
@@ -61,10 +62,11 @@ int main(int argc, char *argv[])
         char *tasksFileContents = readFileToString("tasks.txt");
         Task *tasksArray = NULL;
         size_t tasksArrayCount = 0;
-        if(tasksFileContents != NULL)
+        if(tasksFileContents != NULL) // If the file was read successfully,
         {
+                // turn the string into an array of tasks
                 tasksArray = convertStringToTaskArray(tasksFileContents, &tasksArrayCount);
-                free(tasksFileContents);
+                free(tasksFileContents); // Then get rid of string
         }
 
         switch(GetOption(argv[1]))
@@ -83,6 +85,10 @@ int main(int argc, char *argv[])
                         {
                                 ++tasksArrayCount;
                         }
+                        else
+                        {
+                                printf("Failed to add task from file \"%s\"\n", argv[2]);
+                        }
                         break;
                 }
                 case(rem):
@@ -91,11 +97,18 @@ int main(int argc, char *argv[])
                         {
                                 --tasksArrayCount;
                         }
+                        else
+                        {
+                                printf("Failed to remove task of name \"%s\" from tasks list\n", argv[2]);
+                        }
                         break;
                 }
                 case(mark):
                 {
-                        TaskMark(argv[2], tasksArray, tasksArrayCount);
+                        if(TaskMark(argv[2], tasksArray, tasksArrayCount) == 0)
+                        {
+                                printf("Failed to mark task of name \"%s\" within the tasks list\n", argv[2]);
+                        }
                         break;
                 }
                 default:
@@ -104,6 +117,9 @@ int main(int argc, char *argv[])
                         return(EXIT_FAILURE);
                 }
         }
+
+        // Sort the tasks array
+        qsort(tasksArray, tasksArrayCount, sizeof(Task), sortTasksFunc);
 
         // Save the modified task struct array to file
         char *tasksArrayAsString = convertTaskArrayToString(tasksArray, tasksArrayCount);
@@ -128,3 +144,15 @@ static unsigned char GetOption(char *arg)
         }
         return(NULL_OPTION);
 }
+
+int sortTasksFunc(const void *a, const void *b)
+{
+        const Task *aTask = a;
+        const Task *bTask = b;
+        if(aTask->state != bTask->state)
+        {
+                return(aTask->state - bTask->state);
+        }
+        return(aTask->timeMins - bTask->timeMins);
+}
+
