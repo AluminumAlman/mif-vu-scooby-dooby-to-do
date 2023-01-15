@@ -15,6 +15,15 @@ typedef struct {
 } Task;
 
 /**
+ * combineStrings
+ * Combines two strings into one. AUTOMATICALLY FREES BOTH
+ * @param  destination - the string on the left
+ * @param  source - the string on the right
+ * @return NULL on failure or a new address to a combined string.
+ */
+char *combineStrings(char *left, char *right);
+
+/**
  * reallocCustom
  * Custom implementation of realloc, because in my experience it sometimes fails to actually allocate memory
  * AUTOMATICALLY FREES THE SUPPLIED POINTER

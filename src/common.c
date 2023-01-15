@@ -4,6 +4,22 @@
 #include "mvsdtd.h"
 #include "common.h"
 
+char *combineStrings(char *left, char *right)
+{
+        if(left == NULL || right == NULL)
+        {
+                return(NULL);
+        }
+        left = reallocCustom(left, alignNumberToMemory(strlen(left) + strlen(right) + 1));
+        if(left == NULL)
+        {
+                return(NULL);
+        }
+        strcpy(left + strlen(left), right);
+        free(right);
+        return(left);
+}
+
 void *reallocCustom(void *pointer, size_t size)
 {
         void *temp = malloc(size);
